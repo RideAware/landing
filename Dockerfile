@@ -1,18 +1,15 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+FROM python:3.11-slim-buster
 
-# Set the working directory in the container
-WORKDIR /app
+WORKDIR /rideaware_landing
 
-# Copy the requirements and application files
 COPY requirements.txt requirements.txt
-COPY . .
 
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port Flask runs on
+COPY . .
+
+ENV FLASK_APP=server.py
+
 EXPOSE 5000
 
-# Define the command to run the app
-CMD ["python", "server.py"]
+CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0"]
