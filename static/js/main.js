@@ -16,3 +16,12 @@ document.getElementById("notify-button").addEventListener("click", async () => {
         alert("Please enter a valid email.");
     }
 });
+
+window.addEventListener('scroll', function() {
+    var footerHeight = document.querySelector('footer').offsetHeight;
+    if (window.scrollY + window.innerHeight >= document.body.offsetHeight - footerHeight) {
+            document.querySelector('footer').style.display = 'block';
+        } else {
+            document.querySelector('footer').style.display = 'none';
+        }
+});
