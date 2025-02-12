@@ -1,3 +1,4 @@
 /subscribers.db
 /.venv/
 /.github/
+/__pycache__/
