@@ -1,7 +1,13 @@
 import sqlite3
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 def init_db():
-    conn = sqlite3.connect('subscribers.db')
+    conn = sqlite3.connect(DATABASE_URL)
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS subscribers (
@@ -14,7 +20,7 @@ def init_db():
 
 def add_email(email):
     try:
-        conn = sqlite3.connect('subscribers.db')
+        conn = sqlite3.connect(DATABASE_URL)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO subscribers (email) VALUES (?)", (email,))
         conn.commit()
