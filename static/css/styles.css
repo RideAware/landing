@@ -36,42 +36,24 @@ header nav a {
 }
 
 .hero-section-1 {
-  background-image: linear-gradient(to bottom, #337cf2, #fff);
-  padding: 100px 0;/
   width: 100%;
   margin: 0;
+  padding: 0;
+  overflow: hidden;  /* Hide any overflow if the image is larger */
 }
 
-.hero-section-1 .inner-container {
-  padding: 0 20px;
-}
-
-.hero-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* padding: 0; */
-}
-
-.hero-illustration {
-  width: 650px;
-  height: 500px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.hero-illustration img {
+.hero-content, .hero-text {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 30px;
+  margin: 0;
+  padding: 0;
 }
 
-.hero-text {
-  width: 60%;
-  padding: 20px;
+.hero-text img {
+  width: 70%;      /* The image will take up 50% of its container's width */
+  height: auto;    /* Maintain aspect ratio */
+  display: block;  /* Remove inline spacing if needed */
+  margin: 0 auto;  /* Center the image within its container if desired */
 }
 
 .hero-text h1 {
