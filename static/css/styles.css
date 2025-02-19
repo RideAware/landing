@@ -32,7 +32,7 @@ header nav a {
   text-decoration: none;
   color: #000;
   margin-left: 20px;
-  font-size: 18px;
+  font-size: 22px;
 }
 
 .hero-section-1 {
@@ -179,14 +179,26 @@ main .inner-container {
   padding: 10px 20px;
 }
 
-
-footer {
+.normal-footer {
   background-color: #337cf2;
   color: #fff;
   padding: 10px;
   text-align: center;
   clear: both;
+  margin-top: auto;
 }
+
+.fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #337cf2;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    z-index: 1000;
+  }
 
 img {
   max-width: 100%;
@@ -253,3 +265,43 @@ img {
     padding: 50px 0;
   }
 }
+
+.newsletter { 
+  margin-bottom: 40px; 
+  border-bottom: 1px solid #ddd; 
+  padding-bottom: 20px; 
+}
+
+.newsletter h2 { 
+  color: #007bff; 
+}
+
+.newsletter-time {
+   color: #666; 
+   font-size: 0.9em; 
+  }
+
+  .newsletter-detail {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .newsletter-detail h1 {
+    color: #007bff;
+  }
+  .newsletter-time {
+    color: #666;
+    font-size: 0.9em;
+  }
+  .back-link {
+    margin-top: 20px;
+    display: inline-block;
+    color: #007bff;
+    text-decoration: none;
+  }
+  .back-link:hover {
+    text-decoration: underline;
+  }

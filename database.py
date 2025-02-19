@@ -25,6 +25,16 @@ def init_db():
             email TEXT UNIQUE NOT NULL
         )
     """)
+    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS newsletters(
+            id SERIAL PRIMARY KEY,
+            subject TEXT NOT NULL,
+            body TEXT NOT NULL,
+            sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+        
     conn.commit()
     cursor.close()
     conn.close()
