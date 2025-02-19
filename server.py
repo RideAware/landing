@@ -65,21 +65,19 @@ def unsubscribe():
     else:
         return f"Email {email} was not found or has already been unsubscribed.", 400
 
-
-NewsItem = namedtuple('NewsItem', ['id', 'subject', 'body', 'sent_at'])
-
 @app.route("/newsletters")
 def newsletters():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT id, subject, body, sent_at FROM newsletters ORDER BY sent_at DESC")
-    newsletter_records = cursor.fetchall()
+    results = cursor.fetchall()
+    newsletters = [
+        {"id": rec[0], "subject": rec[1], "body": rec[2], "sent_at": rec[3]} 
+        for rec in results
+    ]
     cursor.close()
     conn.close()
-    
-    newsletters = [NewsItem(*rec) for rec in newsletter_records]
     return render_template("newsletters.html", newsletters=newsletters)
-
 
 @app.route("/newsletter/<int:newsletter_id>")
 def newsletter_detail(newsletter_id):

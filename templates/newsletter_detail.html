@@ -17,10 +17,8 @@
   </header>
   
   <main>
-    <div class="newsletter-detail">
       <h1>{{ newsletter.subject }}</h1>
-      <p class="newsletter-time">Sent on: {{ newsletter.sent_at }}</p>
-      <div class="content">
+      <div class="newsletter-content">
         {{ newsletter.body | safe }}
       </div>
       <a href="/newsletters" class="back-link">← Back to Newsletters</a>

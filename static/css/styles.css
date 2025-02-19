@@ -39,7 +39,7 @@ header nav a {
   width: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;  /* Hide any overflow if the image is larger */
+  overflow: hidden; 
 }
 
 .hero-content, .hero-text {
@@ -50,10 +50,10 @@ header nav a {
 }
 
 .hero-text img {
-  width: 70%;      /* The image will take up 50% of its container's width */
-  height: auto;    /* Maintain aspect ratio */
-  display: block;  /* Remove inline spacing if needed */
-  margin: 0 auto;  /* Center the image within its container if desired */
+  width: 70%;      
+  height: auto;   
+  display: block; 
+  margin: 0 auto;
 }
 
 .hero-text h1 {
@@ -277,31 +277,77 @@ img {
 }
 
 .newsletter-time {
-   color: #666; 
-   font-size: 0.9em; 
+  color: #666;
+  font-size: 0.9em;
+}
+
+.newsletter-detail {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.newsletter-detail h1 {
+  color: #007bff;
+}
+.back-link {
+  margin-top: 20px;
+  display: inline-block;
+  color: #007bff;
+  text-decoration: none;
+}
+.back-link:hover {
+  text-decoration: underline;
+}
+
+main h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #007bff;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.newsletter-content {
+  width: 5000px%;
+}
+
+.newsletter-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  transition: transform 0.15s ease-in-out;
+}
+
+.newsletter-card:hover {
+  transform: translateY(-5px);
+}
+
+.newsletter-card h2 {
+  font-size: 1.5em;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.newsletter-card p.newsletter-time {
+  font-size: 0.8em
+}
+
+.newsletter-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
   }
 
-  .newsletter-detail {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .newsletter-detail h1 {
-    color: #007bff;
-  }
-  .newsletter-time {
-    color: #666;
-    font-size: 0.9em;
-  }
-  .back-link {
-    margin-top: 20px;
-    display: inline-block;
-    color: #007bff;
-    text-decoration: none;
-  }
-  .back-link:hover {
-    text-decoration: underline;
-  }
