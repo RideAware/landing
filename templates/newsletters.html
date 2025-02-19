@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RideAware - Newsletters</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <style>
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+  </style>
+
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">
+        <span>Ride</span><span style="color: #1e4e9c;">Aware</span>
+      </a>
+      <a href="/newsletters" class="active">Newsletters</a>
+    </nav>
+  </header>
+  <main class="newsletter-main">
+    <h1>RideAware Newsletters</h1>
+    {% if newsletters %}
+      {% for nl in newsletters %}
+        <div class="newsletter">
+          <h2>
+            <a href="{{ url_for('newsletter_detail', newsletter_id=nl['id']) }}">{{ nl['subject'] }}</a>
+          </h2>
+          <p class="newsletter-time">Sent on: {{ nl['sent_at'] }}</p>
+          <a href="{{ url_for('newsletter_detail', newsletter_id=nl['id']) }}" class="read-more">Read More</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No newsletters to display yet.</p>
+    {% endif %}
+  </main>
+  <footer class="fixed-footer">
+    <p>© 2025 RideAware. All rights reserved.</p>
+  </footer>
+  <script src="/static/js/main.js"></script>
+</body>
+</html>

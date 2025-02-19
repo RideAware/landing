@@ -2,8 +2,9 @@ import os
 import smtplib
 from email.mime.text import MIMEText
 from flask import Flask, render_template, request, jsonify
-from database import init_db, add_email, remove_email
+from database import get_connection, init_db, add_email, remove_email
 from dotenv import load_dotenv
+from collections import namedtuple
 
 load_dotenv()
 app = Flask(__name__)
@@ -63,6 +64,40 @@ def unsubscribe():
         return f"The email {email} has been unsubscribed.", 200
     else:
         return f"Email {email} was not found or has already been unsubscribed.", 400
+
+@app.route("/newsletters")
+def newsletters():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, subject, body, sent_at FROM newsletters ORDER BY sent_at DESC")
+    results = cursor.fetchall()
+    newsletters = [
+        {"id": rec[0], "subject": rec[1], "body": rec[2], "sent_at": rec[3]} 
+        for rec in results
+    ]
+    cursor.close()
+    conn.close()
+    return render_template("newsletters.html", newsletters=newsletters)
+
+@app.route("/newsletter/<int:newsletter_id>")
+def newsletter_detail(newsletter_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, subject, body, sent_at FROM newsletters WHERE id = %s", (newsletter_id,))
+    record = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if record is None:
+        return "Newsletter not found.", 404
+
+    newsletter = {
+        "id": record[0],
+        "subject": record[1],
+        "body": record[2],
+        "sent_at": record[3]
+    }
+    return render_template("newsletter_detail.html", newsletter=newsletter)
 
 if __name__ == "__main__":
     app.run(debug=True)

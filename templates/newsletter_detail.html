@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RideAware - Newsletter Detail</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+  <header>
+    <nav>
+        <a href="/">
+            <span>Ride</span><span style="color: #1e4e9c;">Aware</span>
+        </a>
+        <a href="/newsletters">Newsletters</a>
+    </nav>
+  </header>
+  
+  <main>
+      <h1>{{ newsletter.subject }}</h1>
+      <div class="newsletter-content">
+        {{ newsletter.body | safe }}
+      </div>
+      <a href="/newsletters" class="back-link">← Back to Newsletters</a>
+    </div>
+  </main>
+  
+  <footer class="fixed-footer">
+    <p>© 2025 RideAware. All rights reserved.</p>
+  </footer>
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
