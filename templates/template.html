@@ -1,0 +1,98 @@
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 750px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      color: #007bff;
+    }
+    h1 {
+      text-align: center;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #666;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+<body>
+  <div class="container">
+    <h1>🚀 RideAware Development Update</h1>
+    <p>Dear RideAware Community,</p>
+    <p>We’re excited to share the latest updates on the development of the RideAware platform! Over the past few weeks, we’ve been hard at work implementing new features, improving the backend infrastructure, and enhancing the user experience. Here’s a summary of what we’ve accomplished:</p>
+
+    <h2>🔒 User Authentication and Security</h2>
+    <ul>
+      <li><strong>Signup and Login System:</strong> We’ve implemented a robust user authentication system that allows users to securely sign up and log in to the platform. Passwords are hashed using industry-standard algorithms (<code>pbkdf2:sha256</code>) to ensure user data is stored securely.</li>
+      <li><strong>Error Handling and Validation:</strong> Input validation has been added to ensure usernames and passwords meet security and usability standards. Users are notified of errors such as invalid credentials or duplicate accounts with clear and helpful messages.</li>
+      <li><strong>Logout Functionality:</strong> A logout feature has been added, allowing users to securely end their sessions.</li>
+    </ul>
+
+    <h2>👤 User Profiles</h2>
+    <ul>
+      <li><strong>User Profile Creation:</strong> A new <code>UserProfile</code> system has been introduced, allowing users to store additional information such as their first name, last name, bio, and profile picture.</li>
+      <li><strong>Automatic Profile Creation:</strong> User profiles are now automatically created when a new user account is registered, ensuring a seamless onboarding experience.</li>
+      <li><strong>One-to-One Relationship:</strong> The backend now supports a one-to-one relationship between users and their profiles, making it easy to manage and query user data.</li>
+    </ul>
+
+    <h2>🛠 Backend Improvements</h2>
+    <ul>
+      <li><strong>PostgreSQL Integration:</strong> We’ve migrated from a local SQLite database to a robust PostgreSQL database hosted on a separate server. This change improves scalability, performance, and environment separation.</li>
+      <li><strong>SQLAlchemy ORM:</strong> The backend now uses SQLAlchemy for database interactions, simplifying the codebase and improving maintainability.</li>
+      <li><strong>Error Logging and Debugging:</strong> Enhanced logging has been added to track issues during signup, login, and database operations. This ensures that any problems can be quickly identified and resolved.</li>
+    </ul>
+
+    <h2>🌐 Frontend Enhancements</h2>
+    <ul>
+      <li><strong>Vue.js Login Component:</strong> A new login component has been developed using Vue.js, providing a clean and user-friendly interface for authentication.</li>
+      <li><strong>Error Feedback:</strong> The frontend now displays clear error messages for invalid login attempts or missing input fields, improving the user experience.</li>
+      <li><strong>Environment-Specific API Configuration:</strong> The frontend now dynamically uses environment variables to configure the API base URL, making it easier to switch between development and production environments.</li>
+    </ul>
+
+    <h2>📧 Newsletter System</h2>
+    <ul>
+      <li><strong>User Notifications:</strong> A foundation has been laid for a newsletter system, allowing users to stay updated on the latest developments and announcements.</li>
+      <li><strong>Unsubscribe Links:</strong> Unsubscribe links are now included in all emails, ensuring compliance with best practices and user preferences.</li>
+    </ul>
+
+    <h2>🎯 What’s Next?</h2>
+    <p>Looking ahead, we’re planning to:</p>
+    <ul>
+      <li>Implement a password reset feature for users who forget their credentials.</li>
+      <li>Add two-factor authentication (2FA) for enhanced account security.</li>
+      <li>Build a dashboard for users to manage their profiles and preferences.</li>
+      <li>Continue refining the frontend design for a more polished user experience.</li>
+    </ul>
+
+    <h2>💡 Get Involved</h2>
+    <p>We’re proud to share that the RideAware platform is open source! If you’re a developer or enthusiast, you can view the codebase, contribute to the project, or provide feedback. Check out the repository here: <a href="https://github.com/rideaware" target="_blank">RideAware GitHub</a>.</p>
+
+    <p>Thank you for your continued support as we build RideAware into a platform that empowers cyclists and fosters a connected community. Stay tuned for more updates!</p>
+
+    <p>Best regards,</p>
+    <p><strong>The RideAware Development Team 🚴‍♂️</strong></p>
+  </div>
+</body>

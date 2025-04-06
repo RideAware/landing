@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RideAware - Newsletter Detail</title>
-  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 </head>
 <body>
   <header>
@@ -17,17 +17,16 @@
   </header>
   
   <main>
+    <a href="/newsletters" class="back-link">← Back to Newsletters</a>
       <h1>{{ newsletter.subject }}</h1>
       <div class="newsletter-content">
         {{ newsletter.body | safe }}
       </div>
-      <a href="/newsletters" class="back-link">← Back to Newsletters</a>
-    </div>
   </main>
   
-  <footer class="fixed-footer">
+  <footer class="normal-footer">
     <p>© 2025 RideAware. All rights reserved.</p>
   </footer>
-  <script src="/static/js/main.js"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

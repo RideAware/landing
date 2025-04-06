@@ -4,15 +4,7 @@
   <meta charset="UTF-8">
   <title>RideAware - Newsletters</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/static/css/styles.css">
-  <style>
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
 </head>
 <body>
@@ -30,10 +22,10 @@
       {% for nl in newsletters %}
         <div class="newsletter">
           <h2>
-            <a href="{{ url_for('newsletter_detail', newsletter_id=nl['id']) }}">{{ nl['subject'] }}</a>
+            <a href="/newsletter/{{ nl['id'] }}">{{ nl['subject'] }}</a>
           </h2>
           <p class="newsletter-time">Sent on: {{ nl['sent_at'] }}</p>
-          <a href="{{ url_for('newsletter_detail', newsletter_id=nl['id']) }}" class="read-more">Read More</a>
+          <a href="/newsletter/{{ nl['id'] }}" class="read-more">Read More</a>
         </div>
       {% endfor %}
     {% else %}
@@ -43,6 +35,6 @@
   <footer class="fixed-footer">
     <p>© 2025 RideAware. All rights reserved.</p>
   </footer>
-  <script src="/static/js/main.js"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
