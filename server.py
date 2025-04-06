@@ -16,15 +16,16 @@ def send_confirmation_email(email):
     SMTP_USER = os.getenv('SMTP_USER')
     SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
 
-    # Create the message for the
     unsubscribe_link = f"{request.url_root}unsubscribe?email={email}"
+
     subject = 'Thanks for subscribing!'
-    body = ("Thanks for subscribing!\n\n"
-            "We're excited to share our journey with you.\n\n"
-            f"If you ever wish to unsubscribe, please click <a href='{unsubscribe_link}'>here</a>."
+
+    html_body = render_template(
+        'confirmation_email.html',
+        unsubscribe_link=unsubscribe_link
     )
 
-    msg = MIMEText(body, 'html', 'utf-8')
+    msg = MIMEText(html_body, 'html', 'utf-8')  # Specify HTML
     msg['Subject'] = subject
     msg['From'] = SMTP_USER
     msg['To'] = email
@@ -36,7 +37,7 @@ def send_confirmation_email(email):
         server.quit()
     except Exception as e:
         print(f"Failed to send email to {email}: {e}")
-
+        
 @app.route("/")
 def index():
     return render_template("index.html")
