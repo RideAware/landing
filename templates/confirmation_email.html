@@ -1,35 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thanks for Subscribing!</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Welcome to RideAware!</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
+      html,
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+      }
+      * {
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+      table,
+      td {
+        mso-table-lspace: 0pt !important;
+        mso-table-rspace: 0pt !important;
+      }
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        outline: none;
+        text-decoration: none;
+        display: block;
+        height: auto;
+        max-width: 100%;
+      }
+      .bg {
+        background-color: #f8fafc;
+      }
+      .container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+      }
+      .header {
+        background: #1e4e9c;
+        background-image: linear-gradient(135deg, #1e4e9c 0%, #337cf2 100%);
+        padding: 40px 24px;
+        text-align: center;
+        color: #ffffff;
+      }
+      .logo-text {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-weight: 800;
+        font-size: 24px;
+        line-height: 1.2;
+        color: #ffffff;
+        margin: 0 0 8px 0;
+      }
+      .logo-accent {
+        color: #00d4ff;
+      }
+      .header-title {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 26px;
+        font-weight: 800;
+        margin: 6px 0 6px 0;
+        color: #ffffff;
+      }
+      .subtitle {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.92);
+        margin: 0;
+      }
+      .content {
+        padding: 32px 24px;
+        text-align: center;
+      }
+      .main-message {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 18px;
+        color: #1a1a1a;
+        font-weight: 600;
+        margin: 0 0 16px 0;
+      }
+      .description {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 15px;
+        color: #6b7280;
+        line-height: 1.6;
+        margin: 0 0 24px 0;
+      }
+      .features-wrap {
+        padding: 0 24px 24px 24px;
+      }
+      .features {
+        border: 1px solid rgba(30, 78, 156, 0.12);
+        border-radius: 12px;
+        background-color: #ffffff;
+        padding: 20px;
+      }
+      .features-title {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        color: #1e4e9c;
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0 0 12px 0;
+        text-align: center;
+      }
+      .feature-item {
+        width: 100%;
+        text-align: left;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #ffffff;
+        border: 1px solid rgba(2, 6, 23, 0.05);
+        margin-bottom: 10px;
+      }
+      .feature-title {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0 0 4px 0;
+      }
+      .feature-desc {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 13px;
+        color: #6b7280;
+        margin: 0;
+      }
+      .cta {
+        padding: 8px 24px 32px 24px;
+        text-align: center;
+      }
+      .cta-btn {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        display: inline-block;
+        background: #1e4e9c;
+        background-image: linear-gradient(135deg, #1e4e9c 0%, #337cf2 100%);
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 14px 28px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 16px;
+      }
+      .social {
+        background-color: #f8fafc;
+        padding: 20px 24px;
+        text-align: center;
+        border-radius: 12px;
+        margin: 0 24px 24px 24px;
+      }
+      .social-title {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+        color: #1a1a1a;
+      }
+      .social-link {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        text-decoration: none;
+        color: #ffffff !important;
+        border-radius: 50%;
+        line-height: 40px;
+        text-align: center;
+        margin: 0 6px;
+        background-image: linear-gradient(135deg, #1e4e9c 0%, #337cf2 100%);
+      }
+      .footer {
+        background: #1a1a1a;
+        color: #ffffff;
+        text-align: center;
+        padding: 24px;
+      }
+      .footer p {
+        margin: 6px 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        font-size: 13px;
+      }
+      .unsubscribe {
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        margin-top: 14px;
+        padding-top: 14px;
+      }
+      .unsubscribe a {
+        color: #9ca3af !important;
+        text-decoration: none;
+        font-size: 13px;
+      }
+      .unsubscribe a:hover {
+        color: #00d4ff !important;
+        text-decoration: underline;
+      }
+      @media only screen and (max-width: 600px) {
+        .header {
+          padding: 32px 18px !important;
         }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
+        .content {
+          padding: 24px 18px !important;
         }
-        a {
-            color: #007bff;
-            text-decoration: none;
+        .features {
+          padding: 16px !important;
         }
-        a:hover {
-            text-decoration: underline;
-        }
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Thanks for subscribing to RideAware newsletter!</h2>
-        <p>We're excited to share our journey with you.</p>
-        <p>If you ever wish to unsubscribe, please click <a href="{{ unsubscribe_link }}">here</a>.</p>
-    </div>
-</body>
+  </head>
+  <body class="bg">
+    <center role="article" aria-roledescription="email">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td align="center">
+            <table role="presentation" class="container" width="600" cellspacing="0" cellpadding="0" border="0">
+              <!-- Header -->
+              <tr>
+                <td class="header">
+                  <div class="logo-text">Ride<span class="logo-accent">Aware</span></div>
+                  <div style="font-size: 36px; line-height: 1; margin-bottom: 10px;" aria-hidden="true">🎉</div>
+                  <div class="header-title">Welcome Aboard!</div>
+                  <div class="subtitle">You're now part of the RideAware community</div>
+                </td>
+              </tr>
+
+              <!-- Body -->
+              <tr>
+                <td class="content">
+                  <p class="main-message">Thanks for subscribing to the RideAware newsletter!</p>
+                  <p class="description">
+                    We're thrilled to have you with us. Expect training tips, performance insights,
+                    product news, and community highlights—delivered straight to your inbox.
+                  </p>
+                </td>
+              </tr>
+
+              <!-- Features -->
+              <tr>
+                <td class="features-wrap">
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="features">
+                    <tr>
+                      <td align="center" style="padding-bottom: 10px;">
+                        <div class="features-title">What to expect from us</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            <td class="feature-item">
+                              <div class="feature-title">Training Tips</div>
+                              <div class="feature-desc">Actionable advice to improve your performance.</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="feature-item">
+                              <div class="feature-title">Performance Insights</div>
+                              <div class="feature-desc">Data-driven analysis for smarter rides.</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="feature-item">
+                              <div class="feature-title">Feature Updates</div>
+                              <div class="feature-desc">Be first to know about new releases.</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="feature-item" style="margin-bottom: 0;">
+                              <div class="feature-title">Community Stories</div>
+                              <div class="feature-desc">Inspiring journeys from fellow cyclists.</div>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <!-- CTA -->
+              <tr>
+                <td class="cta" align="center">
+                  <p style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#1a1a1a; font-size:15px; margin: 0 0 12px 0;">
+                    Ready to start your journey with RideAware?
+                  </p>
+                  <a href="https://rideaware.org" target="_blank" class="cta-btn">Explore RideAware →</a>
+                </td>
+              </tr>
+
+              <!-- Social -->
+              <tr>
+                <td>
+                  <div class="social">
+                    <div class="social-title">Stay Connected</div>
+                    <a href="https://twitter.com" class="social-link" title="Twitter" aria-label="Twitter">T</a>
+                    <a href="https://facebook.com" class="social-link" title="Facebook" aria-label="Facebook">f</a>
+                    <a href="https://instagram.com" class="social-link" title="Instagram" aria-label="Instagram">IG</a>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Footer -->
+              <tr>
+                <td class="footer">
+                  <p><strong>RideAware Team</strong></p>
+                  <p>Empowering cyclists, one ride at a time</p>
+                  <div class="unsubscribe">
+                    <p style="margin: 0;">
+                      <a href="{{.UnsubscribeLink}}">Unsubscribe</a>
+                      &nbsp;|&nbsp;
+                      <a href="mailto:support@rideaware.com">Contact Support</a>
+                    </p>
+                    <p style="font-size: 12px; color: #9ca3af;">
+                      © 2025 RideAware. All rights reserved.
+                    </p>
+                    <p style="font-size: 11px; color: #9ca3af;">
+                      You received this email because you subscribed to RideAware updates.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </body>
 </html>

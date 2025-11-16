@@ -1,32 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RideAware - Newsletter Detail</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
-</head>
-<body>
-  <header>
-    <nav>
-        <a href="/">
-            <span>Ride</span><span style="color: #1e4e9c;">Aware</span>
-        </a>
-        <a href="/newsletters">Newsletters</a>
-    </nav>
-  </header>
-  
-  <main>
-    <a href="/newsletters" class="back-link">← Back to Newsletters</a>
-      <h1>{{ newsletter.subject }}</h1>
-      <div class="newsletter-content">
-        {{ newsletter.body | safe }}
+{{define "title"}}RideAware - {{.Subject}}{{end}}
+
+{{define "content"}}
+  <div class="article-wrap">
+    <aside class="article-aside">
+      <a href="/newsletters" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Back to Newsletters
+      </a>
+
+      <div class="article-meta">
+        <h2 class="article-title">
+          {{.Subject}}
+        </h2>
+
+        <div class="meta-row">
+          <i class="fas fa-calendar-alt"></i>
+          <span>{{.SentAt.Format "January 2, 2006 at 3:04 PM"}}</span>
+        </div>
       </div>
-  </main>
-  
-  <footer class="normal-footer">
-    <p>© 2025 RideAware. All rights reserved.</p>
-  </footer>
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+
+      <nav class="toc">
+        <div class="toc-title">On this page</div>
+        <ol id="toc-list"></ol>
+      </nav>
+    </aside>
+
+    <main class="article-main">
+      <header class="article-hero">
+        <div class="newsletter-icon">
+          <i class="fas fa-envelope-open-text"></i>
+        </div>
+        <h1>{{.Subject}}</h1>
+      </header>
+
+      <article class="newsletter-content" id="article">
+        {{.Body}}
+      </article>
+
+      <div class="newsletter-actions">
+        <a href="/newsletters" class="action-btn primary">
+          <i class="fas fa-list"></i>
+          View All Newsletters
+        </a>
+        <button onclick="window.print()" class="action-btn secondary">
+          <i class="fas fa-print"></i>
+          Print
+        </button>
+        <button onclick="shareNewsletter()" class="action-btn secondary">
+          <i class="fas fa-share-alt"></i>
+          Share
+        </button>
+      </div>
+    </main>
+  </div>
+{{end}}
+
+{{define "extra_scripts"}}
+  <script>
+    function shareNewsletter() {
+      if (navigator.share) {
+        navigator
+          .share({ title: document.title, url: location.href })
+          .catch(() => {});
+      } else {
+        navigator.clipboard.writeText(location.href);
+        alert('Link copied to clipboard!');
+      }
+    }
+
+    // Build TOC from h2/h3 inside the article
+    (function buildTOC() {
+      const article = document.getElementById('article');
+      if (!article) return;
+
+      const headings = article.querySelectorAll('h2, h3');
+      const list = document.getElementById('toc-list');
+      if (!headings.length || !list) return;
+
+      headings.forEach((h, idx) => {
+        const id = h.id || `h-${idx}`;
+        h.id = id;
+
+        const li = document.createElement('li');
+        li.className = h.tagName === 'H2' ? 'toc-h2' : 'toc-h3';
+
+        const a = document.createElement('a');
+        a.href = `#${id}`;
+        a.textContent = h.textContent;
+
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+    })();
+  </script>
+{{end}}
