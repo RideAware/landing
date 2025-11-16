@@ -1,40 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>RideAware - Newsletters</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{{define "title"}}RideAware - Newsletters{{end}}
 
-</head>
-<body>
-  <header>
-    <nav>
-      <a href="/">
-        <span>Ride</span><span style="color: #1e4e9c;">Aware</span>
-      </a>
-      <a href="/newsletters" class="active">Newsletters</a>
-    </nav>
-  </header>
-  <main class="newsletter-main">
-    <h1>RideAware Newsletters</h1>
-    {% if newsletters %}
-      {% for nl in newsletters %}
-        <div class="newsletter">
-          <h2>
-            <a href="/newsletter/{{ nl['id'] }}">{{ nl['subject'] }}</a>
-          </h2>
-          <p class="newsletter-time">Sent on: {{ nl['sent_at'] }}</p>
-          <a href="/newsletter/{{ nl['id'] }}" class="read-more">Read More</a>
+{{define "content"}}
+  <section class="page-header">
+    <div class="page-header-content">
+      <div class="header-icon">
+        <i class="fas fa-newspaper"></i>
+      </div>
+      <h1>RideAware Newsletters</h1>
+      <p>
+        Stay updated with the latest cycling tips, training insights, and
+        product updates from our team.
+      </p>
+    </div>
+  </section>
+
+  <main class="main-content">
+    {{if .}}
+      <div class="newsletters-grid">
+        {{range .}}
+          <article class="newsletter-card">
+            <div class="newsletter-header">
+              <div class="newsletter-icon">
+                <i class="fas fa-envelope-open-text"></i>
+              </div>
+              <div class="newsletter-info">
+                <h2>
+                  <a href="/newsletter/{{.ID}}">
+                    {{.Subject}}
+                  </a>
+                </h2>
+              </div>
+            </div>
+
+            <div class="newsletter-date">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Sent on: {{.SentAt.Format "2006-01-02 15:04:05"}}</span>
+            </div>
+
+            <div class="newsletter-excerpt">
+              Get the latest updates on cycling training, performance tips,
+              and RideAware features in this newsletter edition.
+            </div>
+
+            <a
+              href="/newsletter/{{.ID}}"
+              class="read-more-btn"
+            >
+              Read Full Newsletter
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </article>
+        {{end}}
+      </div>
+    {{else}}
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-inbox"></i>
         </div>
-      {% endfor %}
-    {% else %}
-      <p>No newsletters to display yet.</p>
-    {% endif %}
+        <h3>No Newsletters Yet</h3>
+        <p>
+          We're working on some amazing content for you. Subscribe to be the
+          first to know when we publish our newsletters!
+        </p>
+        <a href="/" class="subscribe-prompt">
+          <i class="fas fa-bell"></i>
+          Subscribe for Updates
+        </a>
+      </div>
+    {{end}}
   </main>
-  <footer class="fixed-footer">
-    <p>© 2025 RideAware. All rights reserved.</p>
-  </footer>
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+{{end}}

@@ -1,95 +1,214 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RideAware</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
-    <header>
-        <nav>
-            <a href="/">
-                <span>Ride</span><span style="color: #1e4e9c;">Aware</span>
-            </a>
-            <a href="/newsletters">Newsletters</a>
-        </nav>
-    </header>
-    <main>
-        <section class="hero-section-1">
-          <div class="hero-content">
-            <div class="hero-text">
-              <img src="{{ url_for('static', filename='assets/RideAwareLogo.svg') }}" alt="RideAware Logo">
+{{define "title"}}RideAware - Smart Cycling Training Platform{{end}}
+
+{{define "content"}}
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-container">
+      <div class="hero-content">
+        <h1>Elevate Your Cycling Journey</h1>
+        <p class="subtitle">
+          The ultimate smart training platform for cyclists who demand
+          excellence in every ride.
+        </p>
+
+        <div class="cta-section">
+          <h3>Coming soon!</h3>
+          <p>Join us while waiting for launch</p>
+
+          <div class="email-form">
+            <input
+              type="email"
+              class="email-input"
+              id="email-input"
+              placeholder="Enter your email address"
+              required
+            />
+            <button class="notify-btn" id="notify-button">Notify Me</button>
           </div>
-        </section>
-        <section class="hero-section-2">
-            <h2>Get notified when we’re launching</h2>
-            <p>Sign up to receive updates and special offers as we prepare to launch.</p>
+        </div>
+      </div>
 
-            <div class="subscription">
-                <input id="email-input" type="email" placeholder="Enter your email" required />
-                <button id="notify-button">Notify Me</button>
+      <div class="hero-visual">
+        <div class="phone-mockup">
+          <div class="screen">
+            <div class="app-interface">
+              <div class="app-brand">
+                <img
+                  src="/static/assets/32x32.png"
+                  alt="RideAware icon"
+                  class="app-brand-icon"
+                  width="32"
+                  height="32"
+                  decoding="async"
+                />
+                <div class="app-logo">RideAware</div>
+              </div>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-number">24.5</div>
+                  <div class="stat-label">KM/H AVG</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">45</div>
+                  <div class="stat-label">MINUTES</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">285</div>
+                  <div class="stat-label">CALORIES</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">18.2</div>
+                  <div class="stat-label">DISTANCE</div>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- Features Section -->
+  {{if .IsHome}}
+    <section class="features" id="features">
+      <div class="section-header">
+        <h2>Powerful Features for Every Cyclist</h2>
+        <p>
+          From beginners to professionals, RideAware provides comprehensive
+          tools to optimize your training and performance.
+        </p>
+      </div>
 
-        </section>
-        <section class="hero-section-3">
-            <h2 class="hero-sec2-header">Features</h2>
-            <div class="feature-cards">
-                <div class="feature-card">
-                    <h3>Workout Planning</h3>
-                    <ul>
-                        <li><b>Customizable Training Plans:</b> Allow users to create customized training plans based on their goals and fitness level.</li>
-                        <li><b>Workout Scheduling:</b> Provide a feature to schedule workouts and set reminders.</li>
-                        <li><b>Goal Setting:</b> Allow users to set and track their fitness goals.</li>
-                    </ul>
-                </div>
-                <div class="feature-card">
-                    <h3>Workout Tracking</h3>
-                    <ul>
-                        <li><b>Workout Logging:</b> Allow users to log their workouts, including exercises, sets, reps, and weight.</li>
-                        <li><b>Data Analysis:</b> Provide tools to analyze user data, including charts, graphs, and statistics.</li>
-                        <li><b>Progress Tracking:</b> Allow users to track their progress over time.</li>
-                    </ul>
-                </div>
-                <div class="feature-card">
-                    <h3>Training and Coaching</h3>
-                    <ul>
-                        <li><b>Coaching and Guidance:</b> Provide coaching and guidance to help users achieve their fitness goals.</li>
-                        <li><b>Virtual Training Rides:</b> Offer immersive virtual training rides to boost users' cycling performance.</li>
-                        <li><b>Structured Workouts:</b> Offer structured workouts to help users improve their fitness and performance.</li>
-                    </ul>
-                </div>
-                <div class="feature-card">
-                    <h3>Nutrition and Recovery</h3>
-                    <ul>
-                        <li><b>Nutrition Planning:</b> Provide tools to help users plan and track their nutrition.</li>
-                        <li><b>Recovery Planning:</b> Offer resources and tools to help users plan and track their recovery.</li>
-                        <li><b>Injury Prevention and Management:</b> Provide resources and tools to help users prevent and manage injuries.</li>
-                    </ul>
-                </div>
-                <div class="feature-card">
-                    <h3>Social and Community</h3>
-                    <ul>
-                        <li><b>Social Sharing:</b> Allow users to share their workouts and progress on social media.</li>
-                        <li><b>Community Forum:</b> Create a community forum where users can connect with each other and share their experiences.</li>
-                        <li><b>Leaderboards:</b> Provide leaderboards to encourage competition and motivation.</li>
-                    </ul>
-                </div>
-                <div class="feature-card">
-                    <h3>Integration and Data</h3>
-                    <ul>
-                        <li><b>Integration with Wearable Devices:</b> Integrate with wearable devices to track user activity and health metrics.</li>
-                        <li><b>Integration with Music Services:</b> Integrate with music services to provide a more engaging workout experience.</li>
-                        <li><b>Data Import/Export:</b> Allow users to import and export their data to other platforms.</li>
-                    </ul>
-                </div>
+      <div class="features-container">
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-calendar-alt"></i>
             </div>
-        </section>
-    </main>
-    <footer class="normal-footer">
-        Copyright &copy; 2025 RideAware. All rights reserved.
-    </footer>
-     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+            <h3>Smart Training Plans</h3>
+            <ul class="feature-list">
+              <li>
+                <strong>AI-Powered Planning:</strong> Customized training plans
+                based on your goals and fitness level
+              </li>
+              <li>
+                <strong>Adaptive Scheduling:</strong> Smart workout scheduling
+                with automated reminders
+              </li>
+              <li>
+                <strong>Goal Tracking:</strong> Set and monitor your cycling
+                objectives in real-time
+              </li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3>Advanced Analytics</h3>
+            <ul class="feature-list">
+              <li>
+                <strong>Detailed Logging:</strong> Track exercises, sets, reps,
+                and performance metrics
+              </li>
+              <li>
+                <strong>Data Visualization:</strong> Interactive charts, graphs,
+                and progress statistics
+              </li>
+              <li>
+                <strong>Progress Insights:</strong> Monitor your improvement
+                over time with AI analysis
+              </li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-bicycle"></i>
+            </div>
+            <h3>Virtual Training</h3>
+            <ul class="feature-list">
+              <li>
+                <strong>Expert Coaching:</strong> Professional guidance to
+                achieve your cycling goals
+              </li>
+              <li>
+                <strong>Immersive Rides:</strong> Virtual training experiences
+                to boost performance
+              </li>
+              <li>
+                <strong>Structured Workouts:</strong> Designed programs for
+                fitness and performance gains
+              </li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h3>Health & Recovery</h3>
+            <ul class="feature-list">
+              <li>
+                <strong>Nutrition Tracking:</strong> Plan and monitor your
+                dietary intake for optimal performance
+              </li>
+              <li>
+                <strong>Recovery Optimization:</strong> Tools and resources for
+                effective rest and recovery
+              </li>
+              <li>
+                <strong>Injury Prevention:</strong> Proactive measures to
+                prevent and manage injuries
+              </li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3>Community & Social</h3>
+            <ul class="feature-list">
+              <li>
+                <strong>Social Sharing:</strong> Share achievements and progress
+                on social platforms
+              </li>
+              <li>
+                <strong>Active Community:</strong> Connect with fellow cyclists
+                and share experiences
+              </li>
+              <li>
+                <strong>Competitive Leaderboards:</strong> Challenge yourself
+                against the community
+              </li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-sync-alt"></i>
+            </div>
+            <h3>Smart Integration</h3>
+            <ul class="feature-list">
+              <li>
+                <strong>Wearable Sync:</strong> Connect with fitness trackers
+                and smart devices
+              </li>
+              <li>
+                <strong>Music Integration:</strong> Seamlessly sync with your
+                favorite music services
+              </li>
+              <li>
+                <strong>Data Portability:</strong> Easy import/export to other
+                cycling platforms
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  {{end}}
+{{end}}

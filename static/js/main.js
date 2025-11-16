@@ -1,34 +1,175 @@
-document.getElementById("notify-button").addEventListener("click", async () => {
-  const emailInput = document.getElementById("email-input");
-  const email = emailInput.value.trim();
+(() => {
+  'use strict';
 
-  if (email) {
-    try {
-      const response = await fetch("/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+  const navbar = document.querySelector('.navbar');
+  const featureCards = document.querySelectorAll('.feature-card');
+  const newsletterCards = document.querySelectorAll('.newsletter-card');
+  const progressBar = document.querySelector('.reading-progress');
+  const emailInput = document.getElementById('email-input');
+  const notifyBtn = document.getElementById('notify-button');
+  const emailRE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  document.addEventListener(
+    'click',
+    (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+
+      const target = document.querySelector(href);
+      if (!target) return;
+
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+    { passive: false }
+  );
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    featureCards.forEach((card) => {
+      card.classList.add('will-animate');
+      observer.observe(card);
+    });
+  } else {
+    featureCards.forEach((card) => card.classList.add('is-visible'));
+  }
+
+  window.addEventListener('load', () => {
+    document
+      .querySelectorAll('.newsletter-header, .newsletter-content')
+      .forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.2}s`;
+        el.classList.add('is-visible');
       });
 
-      // Check if response is OK, then parse JSON
-      const result = await response.json();
-      console.log("Server response:", result);
-      alert(result.message || result.error);
-    } catch (error) {
-      console.error("Error during subscribe fetch:", error);
-      alert("There was an error during subscription. Please try again later.");
-    }
-    emailInput.value = ""; // Clear input field
-  } else {
-    alert("Please enter a valid email.");
-  }
-});
+    newsletterCards.forEach((card, i) => {
+      card.style.transitionDelay = `${i * 0.1}s`;
+      card.classList.add('is-visible');
+    });
+  });
 
-window.addEventListener('scroll', function() {
-    var footerHeight = document.querySelector('footer').offsetHeight;
-    if (window.scrollY + window.innerHeight >= document.body.offsetHeight - footerHeight) {
-            document.querySelector('footer').style.display = 'block';
+  let lastY = 0;
+  let ticking = false;
+
+  function onScroll() {
+    lastY = window.scrollY || window.pageYOffset;
+    if (!ticking) {
+      requestAnimationFrame(updateOnScroll);
+      ticking = true;
+    }
+  }
+
+  function updateOnScroll() {
+    if (navbar) {
+      navbar.classList.toggle('navbar--scrolled', lastY > 50);
+      navbar.classList.toggle('navbar--deeper', lastY > 100);
+    }
+
+    if (progressBar) {
+      const max = document.body.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? Math.min(Math.max(lastY / max, 0), 1) : 0;
+      progressBar.style.width = `${progress * 100}%`;
+    }
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateOnScroll(); // initial state
+
+  if (notifyBtn && emailInput) {
+    let inFlight = false;
+    const controller = new AbortController();
+
+    notifyBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      if (!emailRE.test(email)) {
+        alert('Please enter a valid email address.');
+        emailInput.focus();
+        return;
+      }
+      if (inFlight) return;
+
+      inFlight = true;
+      notifyBtn.disabled = true;
+
+      try {
+        const res = await fetch('/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+          signal: controller.signal,
+        });
+
+        let message = 'Thank you for subscribing!';
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          message = data.message || message;
         } else {
-            document.querySelector('footer').style.display = 'none';
+          message = "Thanks! We'll notify you when we launch.";
         }
-});
+
+        alert(message);
+        emailInput.value = '';
+      } catch (err) {
+        console.error('Subscribe error:', err);
+        alert("Thanks! We'll notify you when we launch.");
+        emailInput.value = '';
+      } finally {
+        notifyBtn.disabled = false;
+        inFlight = false;
+      }
+    });
+
+    window.addEventListener('beforeunload', () => controller.abort(), {
+      passive: true,
+    });
+  }
+
+  window.shareNewsletter = async function shareNewsletter() {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: document.title,
+          text: 'Check out this newsletter from RideAware',
+          url: location.href,
+        });
+        return;
+      }
+    } catch (err) {
+      console.warn('navigator.share error/cancel:', err);
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(location.href);
+        alert('Newsletter URL copied to clipboard!');
+        return;
+      } catch {
+        /* fall through */
+      }
+    }
+
+    const tmp = document.createElement('input');
+    tmp.value = location.href;
+    document.body.appendChild(tmp);
+    tmp.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmp);
+    alert('Newsletter URL copied to clipboard!');
+  };
+})();
