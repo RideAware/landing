@@ -8,6 +8,7 @@ import (
   "os"
   "path/filepath"
   "strconv"
+  "strings"
   "text/template"
   "time"
 
@@ -42,15 +43,44 @@ func New(db *database.DB, cfg *config.Config) *Handler {
 // loggingMiddleware logs HTTP requests
 func (h *Handler) loggingMiddleware(next http.Handler) http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-    start := time.Now()
+    userAgent := r.UserAgent()
 
-    // Create a custom response writer to capture status code
+    // Block malicious bots and common attack patterns
+    blockedPatterns := []string{
+      "python-requests",
+      "curl",
+      "wget",
+      "sqlmap",
+      "nikto",
+      ".php",
+      ".env",
+      ".git",
+      "wp-admin",
+      "xmlrpc",
+      "backup",
+      "config",
+    }
+
+    for _, pattern := range blockedPatterns {
+      if strings.Contains(strings.ToLower(r.RequestURI), strings.ToLower(pattern)) {
+        w.WriteHeader(http.StatusForbidden)
+        fmt.Fprintf(w, "Access Denied")
+        h.logger.Printf("BLOCKED attack: %s %s from %s", r.Method, r.RequestURI, r.RemoteAddr)
+        return
+      }
+      if strings.Contains(strings.ToLower(userAgent), strings.ToLower(pattern)) {
+        w.WriteHeader(http.StatusForbidden)
+        fmt.Fprintf(w, "Access Denied")
+        h.logger.Printf("BLOCKED bot: %s from %s", userAgent, r.RemoteAddr)
+        return
+      }
+    }
+
+    start := time.Now()
     wrapped := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
 
-    // Call the next handler
     next.ServeHTTP(wrapped, r)
 
-    // Log the request
     duration := time.Since(start)
     statusColor := getStatusColor(wrapped.statusCode)
     methodColor := getMethodColor(r.Method)
@@ -63,7 +93,7 @@ func (h *Handler) loggingMiddleware(next http.Handler) http.Handler {
       duration.String(),
       r.RemoteAddr,
       wrapped.contentLength,
-      r.UserAgent(),
+      userAgent,
     )
   })
 }
