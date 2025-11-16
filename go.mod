@@ -5,7 +5,6 @@ go 1.25.4
 require (
 	github.com/jackc/pgx/v5 v5.7.6
 	github.com/joho/godotenv v1.5.1
-	github.com/wneessen/go-mail v0.7.2
 )
 
 require (

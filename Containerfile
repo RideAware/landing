@@ -39,6 +39,6 @@ COPY --from=builder /app/static ./static
 # Copy .env (optional - can be overridden at runtime)
 COPY .env .env
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD ["./server"]

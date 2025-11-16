@@ -26,14 +26,14 @@ func LoadConfig() (*Config, error) {
 
   cfg := &Config{
     Host:     getEnv("HOST", "0.0.0.0"),
-    Port:     getEnv("PORT", "8080"),
-    DBHost:   getEnv("PG_HOST", "localhost"),
-    DBPort:   getEnv("PG_PORT", "5432"),
-    DBName:   getEnv("PG_DATABASE", "newsletter"),
-    DBUser:   getEnv("PG_USER", "postgres"),
+    Port:     getEnv("PORT", "5000"),
+    DBHost:   getEnv("PG_HOST", ""),
+    DBPort:   getEnv("PG_PORT", ""),
+    DBName:   getEnv("PG_DATABASE", ""),
+    DBUser:   getEnv("PG_USER", ""),
     DBPass:   getEnv("PG_PASSWORD", ""),
     SMTPHost: getEnv("SMTP_SERVER", ""),
-    SMTPPort: getEnv("SMTP_PORT", "587"),
+    SMTPPort: getEnv("SMTP_PORT", ""),
     SMTPUser: getEnv("SMTP_USER", ""),
     SMTPPass: getEnv("SMTP_PASSWORD", ""),
   }
