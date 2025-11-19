@@ -156,6 +156,8 @@ func (h *Handler) Start(host, port string) error {
   mux.HandleFunc("/unsubscribe", h.unsubscribeHandler)
   mux.HandleFunc("/newsletters", h.newslettersHandler)
   mux.HandleFunc("/newsletter/", h.newsletterDetailHandler)
+  mux.HandleFunc("/contact", h.contactHandler)
+  mux.HandleFunc("/about", h.aboutHandler)
 
   // Wrap with logging middleware
   handler := h.loggingMiddleware(mux)
@@ -329,6 +331,178 @@ func (h *Handler) newsletterDetailHandler(
   }
 
   tmpl.ExecuteTemplate(w, "base.html", newsletter)
+}
+
+func (h *Handler) contactHandler(w http.ResponseWriter, r *http.Request) {
+  if r.Method != http.MethodGet && r.Method != http.MethodPost {
+    http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+    return
+  }
+
+  if r.Method == http.MethodGet {
+    tmpl, err := template.ParseFiles(
+      h.getTemplatePath("base.html"),
+      h.getTemplatePath("contact.html"),
+    )
+    if err != nil {
+      http.Error(w, fmt.Sprintf("Failed to parse template: %v", err), http.StatusInternalServerError)
+      return
+    }
+
+    data := map[string]interface{}{
+      "IsContact": true,
+    }
+
+    tmpl.ExecuteTemplate(w, "base.html", data)
+    return
+  }
+
+  if r.Method == http.MethodPost {
+    h.handleContactSubmission(w, r)
+  }
+}
+
+func (h *Handler) handleContactSubmission(w http.ResponseWriter, r *http.Request) {
+  // Parse form data
+  if err := r.ParseForm(); err != nil {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "Failed to parse form data",
+    })
+    return
+  }
+
+  // Extract form fields
+  name := strings.TrimSpace(r.FormValue("name"))
+  email := strings.TrimSpace(r.FormValue("email"))
+  subject := strings.TrimSpace(r.FormValue("subject"))
+  message := strings.TrimSpace(r.FormValue("message"))
+  subscribe := r.FormValue("subscribe") == "on"
+
+  // Validate required fields
+  if name == "" || email == "" || subject == "" || message == "" {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "All fields are required",
+    })
+    return
+  }
+
+  // Validate email format (basic validation)
+  if !strings.Contains(email, "@") || !strings.Contains(email, ".") {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "Invalid email address",
+    })
+    return
+  }
+
+  // Validate message length (prevent spam)
+  if len(message) < 10 {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "Message must be at least 10 characters",
+    })
+    return
+  }
+
+  if len(message) > 5000 {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "Message must be less than 5000 characters",
+    })
+    return
+  }
+
+  // If subscribe checkbox is checked, add to subscribers
+  if subscribe {
+    if err := h.db.AddSubscriber(r.Context(), email); err != nil {
+      // Log but don't fail the contact submission
+      h.logger.Printf(
+        "ℹ Subscriber %s already exists or failed to add: %v",
+        email,
+        err,
+      )
+    } else {
+      h.logger.Printf("✓ New subscriber added: %s", email)
+    }
+  }
+
+  // Send confirmation email to the user
+  if err := h.email.SendContactConfirmation(email, name); err != nil {
+    h.logger.Printf(
+      "❌ Failed to send contact confirmation to %s: %v",
+      email,
+      err,
+    )
+  } else {
+    h.logger.Printf("✓ Contact confirmation email sent to %s", email)
+  }
+
+  // Send notification email to admin
+  adminEmail := h.cfg.AdminEmail
+  if adminEmail != "" {
+    if err := h.email.SendContactNotification(
+      adminEmail,
+      name,
+      email,
+      subject,
+      message,
+    ); err != nil {
+      h.logger.Printf(
+        "❌ Failed to send contact notification to admin: %v",
+        err,
+      )
+    } else {
+      h.logger.Printf("✓ Contact notification sent to admin: %s", adminEmail)
+    }
+  }
+
+  // Save contact message to database (optional - add to your DB interface)
+  if err := h.db.AddContactMessage(r.Context(), name, email, subject, message); err != nil {
+    h.logger.Printf(
+      "⚠ Failed to save contact message: %v",
+      err,
+    )
+  }
+
+  h.logger.Printf("✓ Contact form submitted by %s (%s)", name, email)
+
+  // Return success response
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusCreated)
+  json.NewEncoder(w).Encode(map[string]string{
+    "message": "Thank you for your message. We'll get back to you soon!",
+  })
+}
+
+func (h *Handler) aboutHandler(w http.ResponseWriter, r *http.Request) {
+  if r.Method != http.MethodGet {
+    http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+    return
+  }
+
+  tmpl, err := template.ParseFiles(
+    h.getTemplatePath("base.html"),
+    h.getTemplatePath("about.html"),
+  )
+  if err != nil {
+    http.Error(w, fmt.Sprintf("Failed to parse template: %v", err), http.StatusInternalServerError)
+    h.logger.Printf("❌ Template parse error: %v", err)
+    return
+  }
+
+  data := map[string]interface{}{
+    "IsAbout": true,
+  }
+
+  w.Header().Set("Content-Type", "text/html")
+  tmpl.ExecuteTemplate(w, "base.html", data)
 }
 
 func getBaseURL(r *http.Request) string {

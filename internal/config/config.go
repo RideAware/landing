@@ -19,6 +19,7 @@ type Config struct {
   SMTPPort string
   SMTPUser string
   SMTPPass string
+  AdminEmail string
 }
 
 func LoadConfig() (*Config, error) {
@@ -36,6 +37,7 @@ func LoadConfig() (*Config, error) {
     SMTPPort: getEnv("SMTP_PORT", ""),
     SMTPUser: getEnv("SMTP_USER", ""),
     SMTPPass: getEnv("SMTP_PASSWORD", ""),
+    AdminEmail: os.Getenv("ADMIN_EMAIL"),
   }
 
   if cfg.SMTPHost == "" {

@@ -58,6 +58,14 @@ func (db *DB) InitDB(ctx context.Context) error {
       body TEXT NOT NULL,
       sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`,
+    `CREATE TABLE IF NOT EXISTS contact_messages (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      message TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
   }
 
   for _, query := range queries {
@@ -153,6 +161,28 @@ func (db *DB) GetNewsletter(
   }
 
   return &n, nil
+}
+
+func (db *DB) AddContactMessage(
+  ctx context.Context,
+  name, email, subject, message string,
+) error {
+  query := `
+    INSERT INTO contact_messages (name, email, subject, message, created_at)
+    VALUES ($1, $2, $3, $4, $5)
+  `
+
+  _, err := db.pool.Exec(
+    ctx,
+    query,
+    name,
+    email,
+    subject,
+    message,
+    time.Now(),
+  )
+
+  return err
 }
 
 func (db *DB) Close(ctx context.Context) {
