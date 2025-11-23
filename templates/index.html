@@ -12,8 +12,12 @@
         </p>
 
         <div class="cta-section">
-          <h3>Coming soon!</h3>
-          <p>Join us while waiting for launch</p>
+          <div class="beta-badge">
+            <span class="badge-icon">⚡</span>
+            <span class="badge-text">Development Build Available</span>
+          </div>
+          <h3>Join Our Newsletter</h3>
+          <p>Get updates on new features and development progress</p>
 
           <div class="email-form">
             <input
@@ -23,7 +27,14 @@
               placeholder="Enter your email address"
               required
             />
-            <button class="notify-btn" id="notify-button">Notify Me</button>
+            <button class="notify-btn" id="notify-button">Subscribe</button>
+          </div>
+
+          <div class="beta-notice">
+            <p>
+              <strong>Note:</strong> This is an early development build. Not all features are fully functional yet. 
+              Your feedback helps us build better! 🚀
+            </p>
           </div>
         </div>
       </div>
@@ -72,15 +83,15 @@
   <!-- Features Section -->
   {{if .IsHome}}
     <section class="features" id="features">
-      <div class="section-header">
-        <h2>Powerful Features for Every Cyclist</h2>
-        <p>
-          From beginners to professionals, RideAware provides comprehensive
-          tools to optimize your training and performance.
-        </p>
-      </div>
-
       <div class="features-container">
+        <div class="section-header">
+          <h2>Powerful Features for Every Cyclist</h2>
+          <p>
+            From beginners to professionals, RideAware provides comprehensive
+            tools to optimize your training and performance.
+          </p>
+        </div>
+
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-icon">
@@ -207,6 +218,78 @@
               </li>
             </ul>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Development Status Section -->
+    <section class="development-status">
+      <div class="status-container">
+        <h2>Current Development Status</h2>
+        <p class="status-intro">
+          RideAware is actively being built. This development build lets you experience the platform early 
+          and help us refine it. Some features are still in progress.
+        </p>
+
+        <div class="status-grid">
+          <div class="status-item ready">
+            <span class="status-badge">✓ Live</span>
+            <h4>User Authentication</h4>
+            <p>Sign up, login, and user profiles fully functional</p>
+          </div>
+
+          <div class="status-item ready">
+            <span class="status-badge">✓ Live</span>
+            <h4>Equipment Management</h4>
+            <p>Add and manage your bikes and cycling gear</p>
+          </div>
+
+          <div class="status-item ready">
+            <span class="status-badge">✓ Live</span>
+            <h4>Training Zones</h4>
+            <p>HR and power zone calculations</p>
+          </div>
+
+          <div class="status-item in-progress">
+            <span class="status-badge">🔨 In Progress</span>
+            <h4>Workout Planning</h4>
+            <p>Structured workout builder with interval support</p>
+          </div>
+
+          <div class="status-item in-progress">
+            <span class="status-badge">🔨 In Progress</span>
+            <h4>Performance Analytics</h4>
+            <p>Detailed performance tracking and metrics</p>
+          </div>
+
+          <div class="status-item planned">
+            <span class="status-badge">📋 Planned</span>
+            <h4>Device Integration</h4>
+            <p>Sync with wearables and cycling computers</p>
+          </div>
+
+          <div class="status-item planned">
+            <span class="status-badge">📋 Planned</span>
+            <h4>Community Features</h4>
+            <p>Social sharing and competitive leaderboards</p>
+          </div>
+
+          <div class="status-item planned">
+            <span class="status-badge">📋 Planned</span>
+            <h4>Advanced Training</h4>
+            <p>AI-powered coaching and personalized plans</p>
+          </div>
+        </div>
+
+        <div class="feedback-cta">
+          <h3>Ready to Try RideAware?</h3>
+          <p>
+            Access the development build and start testing RideAware today. Your feedback helps us build the ultimate cycling training platform.
+          </p>
+          <a href="https://dev.rideaware.org" class="action-btn primary" target="_blank">
+            <i class="fas fa-rocket"></i>
+            Access Development Build
+          </a>
         </div>
       </div>
     </section>
