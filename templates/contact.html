@@ -95,6 +95,23 @@
         </label>
       </div>
 
+      <!-- Simple Addition CAPTCHA -->
+      <div class="form-group">
+        <label for="captcha">
+          Quick Math Check <span class="required">*</span>
+        </label>
+        <div id="captchaQuestion" style="font-weight: bold; margin-bottom: 8px; color: #333; font-size: 16px;"></div>
+        <input
+          type="text"
+          id="captcha"
+          name="captcha"
+          required
+          placeholder="Enter the answer"
+          autocomplete="off"
+          inputmode="numeric"
+        />
+      </div>
+
       <button type="submit" class="form-submit">
         <i class="fas fa-paper-plane"></i>
         Send Message
@@ -126,46 +143,88 @@
 </div>
 
 <script>
-  document.getElementById('contactForm').addEventListener(
-    'submit',
-    async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const formData = new FormData(form);
+  let currentCaptcha = null;
 
-      console.log('Form submitted');
-      console.log('Form data:', Object.fromEntries(formData));
+  // Generate simple addition CAPTCHA (easier)
+  function generateCaptcha() {
+    const num1 = Math.floor(Math.random() * 20) + 1;  // 1-20
+    const num2 = Math.floor(Math.random() * 20) + 1;  // 1-20
+    const answer = num1 + num2;
+    
+    return {
+      question: `${num1} + ${num2} = ?`,
+      answer: answer.toString()
+    };
+  }
 
-      try {
-        const response = await fetch('/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams(formData),
-        });
+  // Initialize CAPTCHA on page load
+  function initCaptcha() {
+    currentCaptcha = generateCaptcha();
+    document.getElementById('captchaQuestion').textContent = currentCaptcha.question;
+    document.getElementById('captcha').value = '';
+    document.getElementById('captcha').focus();
+  }
 
-        console.log('Response status:', response.status);
-        const data = await response.json();
-        console.log('Response data:', data);
+  // Initialize on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCaptcha);
+  } else {
+    initCaptcha();
+  }
 
-        if (response.ok) {
-          document.getElementById('successMessage')
-            .classList.add('show');
-          form.reset();
-          setTimeout(() => {
-            document.getElementById('successMessage')
-              .classList.remove('show');
-          }, 5000);
-        } else {
-          alert('Error: ' + (data.error || 'Failed to send message'));
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to send message: ' + error.message);
-      }
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Validate CAPTCHA
+    const userAnswer = document.getElementById('captcha').value.trim();
+    if (userAnswer !== currentCaptcha.answer) {
+      alert('Incorrect answer. Please try again.');
+      currentCaptcha = generateCaptcha();
+      document.getElementById('captchaQuestion').textContent = currentCaptcha.question;
+      document.getElementById('captcha').value = '';
+      document.getElementById('captcha').focus();
+      return;
     }
-  );
+
+    const form = e.target;
+    const formData = new FormData(form);
+    
+    // Don't send the captcha answer to server
+    formData.delete('captcha');
+
+    console.log('Form submitted');
+
+    try {
+      const response = await fetch('/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(formData),
+      });
+
+      console.log('Response status:', response.status);
+      const data = await response.json();
+      console.log('Response data:', data);
+
+      if (response.ok) {
+        document.getElementById('successMessage').classList.add('show');
+        form.reset();
+        initCaptcha();
+        
+        setTimeout(() => {
+          document.getElementById('successMessage').classList.remove('show');
+        }, 5000);
+      } else {
+        alert('Error: ' + (data.error || 'Failed to send message'));
+        initCaptcha();
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to send message: ' + error.message);
+      initCaptcha();
+    }
+  });
 </script>
 
 {{end}}

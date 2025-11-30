@@ -422,7 +422,6 @@ func (h *Handler) handleContactSubmission(w http.ResponseWriter, r *http.Request
   // If subscribe checkbox is checked, add to subscribers
   if subscribe {
     if err := h.db.AddSubscriber(r.Context(), email); err != nil {
-      // Log but don't fail the contact submission
       h.logger.Printf(
         "ℹ Subscriber %s already exists or failed to add: %v",
         email,
@@ -463,7 +462,7 @@ func (h *Handler) handleContactSubmission(w http.ResponseWriter, r *http.Request
     }
   }
 
-  // Save contact message to database (optional - add to your DB interface)
+  // Save contact message to database
   if err := h.db.AddContactMessage(r.Context(), name, email, subject, message); err != nil {
     h.logger.Printf(
       "⚠ Failed to save contact message: %v",

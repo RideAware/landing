@@ -1,3 +1,5 @@
+github.com/altcha-org/altcha-lib-go v0.2.2 h1:KY7a7jFUf6tFKZF6MzuZMhSWuGMv0MtVkK/Kj4Oas38=
+github.com/altcha-org/altcha-lib-go v0.2.2/go.mod h1:I8ESLVWR9C58uvGufB/AJDPhaSU4+4Oh3DLpVtgwDAk=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
