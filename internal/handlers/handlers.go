@@ -370,51 +370,58 @@ func isEnglishText(text string) bool {
     return true
   }
 
-  englishCharCount := 0
-  nonASCIICount := 0
-  totalCharCount := 0
-
-  // Common English words to boost score
-  commonEnglish := []string{
-    "the ", "and ", "is ", "to ", "of ", "for ", "that ", "with ", "this ", "have ",
-    "from ", "would ", "could ", "about ", "more ", "which ", "been ", "their ",
-  }
-
   lowerText := strings.ToLower(text)
-  englishWordBoost := 0
-  for _, word := range commonEnglish {
-    if strings.Contains(lowerText, word) {
-      englishWordBoost += 10
-    }
+
+  // Very common English words that should appear in legitimate English messages
+  requiredEnglishWords := []string{
+    "the", "and", "is", "to", "of", "for", "that", "with", "this", "have",
+    "from", "be", "are", "was", "were", "been", "i", "you", "he", "she",
+    "we", "they", "my", "your", "his", "her", "it", "what", "which", "who",
+    "when", "where", "why", "how", "can", "will", "would", "should", "could",
+    "do", "does", "did", "get", "got", "go", "going", "make", "made", "know",
+    "think", "want", "need", "like", "help", "work", "use", "ask", "say", "tell",
+    "give", "find", "tell", "become", "leave", "feel", "try", "ask", "need",
+    "meet", "include", "continue", "set", "learn", "change", "lead", "understand",
   }
 
-  for _, r := range text {
-    if unicode.IsLetter(r) || unicode.IsNumber(r) || unicode.IsSpace(r) || unicode.IsPunct(r) {
-      totalCharCount++
+  englishWordCount := 0
+  totalWords := 0
 
-      if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') ||
-        r == ' ' || r == '.' || r == ',' || r == '!' || r == '?' || r == '-' || r == '\'' || r == '"' ||
-        r == ';' || r == ':' || r == '(' || r == ')' || r == '\n' || r == '\t' {
-        englishCharCount++
-      } else if r > 127 {
-        nonASCIICount++
+  // Split into words
+  words := strings.FieldsFunc(lowerText, func(r rune) bool {
+    return !unicode.IsLetter(r) && !unicode.IsNumber(r)
+  })
+
+  for _, word := range words {
+    if len(word) > 0 {
+      totalWords++
+      // Check if word is in our English word list
+      for _, engWord := range requiredEnglishWords {
+        if word == engWord {
+          englishWordCount++
+          break
+        }
       }
     }
   }
 
-  if totalCharCount == 0 {
-    return true
+  // For short messages (less than 50 characters), be more lenient
+  if len(text) < 50 {
+    return englishWordCount >= 1
   }
 
-  // If more than 3 non-ASCII characters, likely spam/bot
-  if nonASCIICount > 3 {
-    return false
+  // For medium messages (50-200 chars), require at least 2 English words
+  if len(text) < 200 {
+    return englishWordCount >= 2
   }
 
-  englishPercentage := float64(englishCharCount) / float64(totalCharCount)
+  // For longer messages, require at least 10% of words to be common English words
+  if totalWords > 0 {
+    englishPercentage := float64(englishWordCount) / float64(totalWords)
+    return englishPercentage >= 0.1
+  }
 
-  // Stricter requirements with word boost
-  return englishPercentage >= 0.75 || (englishPercentage >= 0.65 && englishWordBoost > 0)
+  return true
 }
 
 // isSpamMessage checks if a message looks like spam
