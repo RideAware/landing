@@ -7,10 +7,12 @@ import (
   "net/http"
   "os"
   "path/filepath"
+  "regexp"
   "strconv"
   "strings"
   "text/template"
   "time"
+  "unicode"
 
   "landing/internal/config"
   "landing/internal/database"
@@ -362,6 +364,180 @@ func (h *Handler) contactHandler(w http.ResponseWriter, r *http.Request) {
   }
 }
 
+// isEnglishText checks if text is primarily in English
+func isEnglishText(text string) bool {
+  if len(text) == 0 {
+    return true
+  }
+
+  englishCharCount := 0
+  nonASCIICount := 0
+  totalCharCount := 0
+
+  for _, r := range text {
+    // Count letters and numbers
+    if unicode.IsLetter(r) || unicode.IsNumber(r) || unicode.IsSpace(r) || unicode.IsPunct(r) {
+      totalCharCount++
+
+      // English ASCII range (a-z, A-Z, 0-9, common punctuation/spaces)
+      if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') ||
+        r == ' ' || r == '.' || r == ',' || r == '!' || r == '?' || r == '-' || r == '\'' || r == '"' ||
+        r == ';' || r == ':' || r == '(' || r == ')' || r == '\n' || r == '\t' {
+        englishCharCount++
+      } else if r > 127 { // Non-ASCII character
+        nonASCIICount++
+      }
+    }
+  }
+
+  if totalCharCount == 0 {
+    return true
+  }
+
+  // Allow up to 10% non-ASCII characters (for names, etc)
+  // But require at least 70% English ASCII
+  englishPercentage := float64(englishCharCount) / float64(totalCharCount)
+
+  return englishPercentage >= 0.7
+}
+
+// isSpamMessage checks if a message looks like spam
+func isSpamMessage(message string) bool {
+  // Convert to lowercase for checks
+  lowerMsg := strings.ToLower(message)
+
+  // Check for common spam patterns
+  spamPatterns := []string{
+    "viagra", "cialis", "casino", "lottery", "prize",
+    "click here", "buy now", "limited time",
+    "congratulations", "you have won", "claim your",
+    "bitcoin", "crypto", "forex", "trading bot",
+    "free money", "make money fast", "work from home",
+    "nigerian", "inheritance", "transfer funds",
+    "<!--", "javascript:", "onclick=", "<script",
+  }
+
+  for _, pattern := range spamPatterns {
+    if strings.Contains(lowerMsg, pattern) {
+      return true
+    }
+  }
+
+  // Check for excessive URLs
+  urlRegex := regexp.MustCompile(`https?://`)
+  if len(urlRegex.FindAllString(lowerMsg, -1)) > 2 {
+    return true
+  }
+
+  // Check for excessive special characters (spam often has many !)
+  exclamationCount := strings.Count(lowerMsg, "!")
+  if exclamationCount > 3 {
+    return true
+  }
+
+  // Check for repeated characters (spam often has "!!!", "...", etc)
+  if strings.Contains(lowerMsg, "!!!") || strings.Contains(lowerMsg, "???") {
+    return true
+  }
+
+  // Check for all caps (usually spam)
+  if len(lowerMsg) > 20 {
+    letterCount := 0
+    capsCount := 0
+    for _, r := range message {
+      if (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') {
+        letterCount++
+        if r >= 'A' && r <= 'Z' {
+          capsCount++
+        }
+      }
+    }
+    if letterCount > 0 && capsCount/letterCount > 0.7 {
+      return true
+    }
+  }
+
+  // Check for repeated words
+  words := strings.Fields(lowerMsg)
+  if len(words) > 5 {
+    wordCount := make(map[string]int)
+    for _, word := range words {
+      wordCount[word]++
+    }
+    for _, count := range wordCount {
+      if count > 4 { // Same word appears more than 4 times
+        return true
+      }
+    }
+  }
+
+  return false
+}
+
+// isValidName checks if name looks legitimate
+func isValidName(name string) bool {
+  // Name should be at least 2 characters and at most 100
+  if len(name) < 2 || len(name) > 100 {
+    return false
+  }
+
+  // Name should not contain excessive numbers
+  numberCount := 0
+  for _, r := range name {
+    if r >= '0' && r <= '9' {
+      numberCount++
+    }
+  }
+  if numberCount > len(name)/3 {
+    return false
+  }
+
+  // Name should not contain URLs
+  if strings.Contains(name, "http") || strings.Contains(name, "://") {
+    return false
+  }
+
+  return true
+}
+
+// isValidEmail checks if email looks legitimate
+func isValidEmail(email string) bool {
+  // Basic email validation
+  if !strings.Contains(email, "@") || !strings.Contains(email, ".") {
+    return false
+  }
+
+  parts := strings.Split(email, "@")
+  if len(parts) != 2 {
+    return false
+  }
+
+  // Local part should be 1-64 chars
+  if len(parts[0]) < 1 || len(parts[0]) > 64 {
+    return false
+  }
+
+  // Domain part should be 3-255 chars
+  if len(parts[1]) < 3 || len(parts[1]) > 255 {
+    return false
+  }
+
+  // Check for valid domain structure
+  domainParts := strings.Split(parts[1], ".")
+  if len(domainParts) < 2 {
+    return false
+  }
+
+  // Each domain label should be 1-63 chars
+  for _, label := range domainParts {
+    if len(label) < 1 || len(label) > 63 {
+      return false
+    }
+  }
+
+  return true
+}
+
 func (h *Handler) handleContactSubmission(w http.ResponseWriter, r *http.Request) {
   // Parse form data
   if err := r.ParseForm(); err != nil {
@@ -390,17 +566,47 @@ func (h *Handler) handleContactSubmission(w http.ResponseWriter, r *http.Request
     return
   }
 
-  // Validate email format (basic validation)
-  if !strings.Contains(email, "@") || !strings.Contains(email, ".") {
+  // Validate name format
+  if !isValidName(name) {
+    h.logger.Printf("⚠ Rejected submission: Invalid name format - %s", name)
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusBadRequest)
     json.NewEncoder(w).Encode(map[string]string{
-      "error": "Invalid email address",
+      "error": "Please provide a valid name",
     })
     return
   }
 
-  // Validate message length (prevent spam)
+  // Validate email format
+  if !isValidEmail(email) {
+    h.logger.Printf("⚠ Rejected submission: Invalid email format - %s", email)
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "Please provide a valid email address",
+    })
+    return
+  }
+
+  // Validate subject
+  validSubjects := map[string]bool{
+    "general":     true,
+    "support":     true,
+    "partnership": true,
+    "feedback":    true,
+    "other":       true,
+  }
+  if !validSubjects[subject] {
+    h.logger.Printf("⚠ Rejected submission: Invalid subject - %s", subject)
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "Please select a valid subject",
+    })
+    return
+  }
+
+  // Validate message length
   if len(message) < 10 {
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusBadRequest)
@@ -415,6 +621,28 @@ func (h *Handler) handleContactSubmission(w http.ResponseWriter, r *http.Request
     w.WriteHeader(http.StatusBadRequest)
     json.NewEncoder(w).Encode(map[string]string{
       "error": "Message must be less than 5000 characters",
+    })
+    return
+  }
+
+  // Check if message is in English
+  if !isEnglishText(message) {
+    h.logger.Printf("⚠ Rejected submission: Non-English message from %s (%s)", name, email)
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "Please submit your message in English",
+    })
+    return
+  }
+
+  // Check if message is spam
+  if isSpamMessage(message) {
+    h.logger.Printf("⚠ Rejected spam submission from %s (%s): %s", name, email, message[:100])
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{
+      "error": "Your message was flagged as spam. Please try again with a different message.",
     })
     return
   }
