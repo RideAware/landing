@@ -374,17 +374,29 @@ func isEnglishText(text string) bool {
   nonASCIICount := 0
   totalCharCount := 0
 
+  // Common English words to boost score
+  commonEnglish := []string{
+    "the ", "and ", "is ", "to ", "of ", "for ", "that ", "with ", "this ", "have ",
+    "from ", "would ", "could ", "about ", "more ", "which ", "been ", "their ",
+  }
+
+  lowerText := strings.ToLower(text)
+  englishWordBoost := 0
+  for _, word := range commonEnglish {
+    if strings.Contains(lowerText, word) {
+      englishWordBoost += 10
+    }
+  }
+
   for _, r := range text {
-    // Count letters and numbers
     if unicode.IsLetter(r) || unicode.IsNumber(r) || unicode.IsSpace(r) || unicode.IsPunct(r) {
       totalCharCount++
 
-      // English ASCII range (a-z, A-Z, 0-9, common punctuation/spaces)
       if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') ||
         r == ' ' || r == '.' || r == ',' || r == '!' || r == '?' || r == '-' || r == '\'' || r == '"' ||
         r == ';' || r == ':' || r == '(' || r == ')' || r == '\n' || r == '\t' {
         englishCharCount++
-      } else if r > 127 { // Non-ASCII character
+      } else if r > 127 {
         nonASCIICount++
       }
     }
@@ -394,11 +406,15 @@ func isEnglishText(text string) bool {
     return true
   }
 
-  // Allow up to 10% non-ASCII characters (for names, etc)
-  // But require at least 70% English ASCII
+  // If more than 3 non-ASCII characters, likely spam/bot
+  if nonASCIICount > 3 {
+    return false
+  }
+
   englishPercentage := float64(englishCharCount) / float64(totalCharCount)
 
-  return englishPercentage >= 0.7
+  // Stricter requirements with word boost
+  return englishPercentage >= 0.75 || (englishPercentage >= 0.65 && englishWordBoost > 0)
 }
 
 // isSpamMessage checks if a message looks like spam
@@ -415,6 +431,9 @@ func isSpamMessage(message string) bool {
     "free money", "make money fast", "work from home",
     "nigerian", "inheritance", "transfer funds",
     "<!--", "javascript:", "onclick=", "<script",
+    "sveiki", "ciao", "hola", "привет",
+    "harga", "karna", "anda", "dari",
+    "toughalia", "comfythings",
   }
 
   for _, pattern := range spamPatterns {
@@ -425,22 +444,36 @@ func isSpamMessage(message string) bool {
 
   // Check for excessive URLs
   urlRegex := regexp.MustCompile(`https?://`)
-  if len(urlRegex.FindAllString(lowerMsg, -1)) > 2 {
+  if len(urlRegex.FindAllString(lowerMsg, -1)) > 1 {
     return true
   }
 
-  // Check for excessive special characters (spam often has many !)
+  // Check for email addresses in message (spam often includes contact info)
+  emailRegex := regexp.MustCompile(`[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}`)
+  emailMatches := emailRegex.FindAllString(lowerMsg, -1)
+  if len(emailMatches) > 0 {
+    return true
+  }
+
+  // Check for phone numbers (often spam)
+  phoneRegex := regexp.MustCompile(`\+?[0-9]{7,}`)
+  if len(phoneRegex.FindAllString(lowerMsg, -1)) > 0 {
+    return true
+  }
+
+  // Check for excessive special characters
   exclamationCount := strings.Count(lowerMsg, "!")
-  if exclamationCount > 3 {
+  if exclamationCount > 2 {
     return true
   }
 
-  // Check for repeated characters (spam often has "!!!", "...", etc)
-  if strings.Contains(lowerMsg, "!!!") || strings.Contains(lowerMsg, "???") {
+  // Check for repeated characters
+  if strings.Contains(lowerMsg, "!!!") || strings.Contains(lowerMsg, "???") ||
+    strings.Contains(lowerMsg, "...") {
     return true
   }
 
-  // Check for all caps (usually spam)
+  // Check for all caps
   if len(lowerMsg) > 20 {
     letterCount := 0
     capsCount := 0
@@ -452,7 +485,7 @@ func isSpamMessage(message string) bool {
         }
       }
     }
-    if letterCount > 0 && float64(capsCount)/float64(letterCount) > 0.7 {
+    if letterCount > 0 && float64(capsCount)/float64(letterCount) > 0.6 {
       return true
     }
   }
@@ -465,10 +498,45 @@ func isSpamMessage(message string) bool {
       wordCount[word]++
     }
     for _, count := range wordCount {
-      if count > 4 { // Same word appears more than 4 times
+      if count > 3 {
         return true
       }
     }
+  }
+
+  // Check message length - very short messages are often spam
+  if len(message) < 15 {
+    return true
+  }
+
+  // Check for gibberish - high ratio of uncommon character transitions
+  uncommonCount := 0
+  for i := 0; i < len(lowerMsg)-1; i++ {
+    char := lowerMsg[i]
+    nextChar := lowerMsg[i+1]
+
+    // Check for unlikely letter combinations
+    if (char >= 'a' && char <= 'z') && (nextChar >= 'a' && nextChar <= 'z') {
+      // Common pairs in English
+      commonPairs := map[string]bool{
+        "th": true, "he": true, "in": true, "er": true, "an": true,
+        "ed": true, "nd": true, "to": true, "en": true, "ti": true,
+        "es": true, "or": true, "te": true, "ar": true, "ou": true,
+        "it": true, "ha": true, "is": true, "co": true, "me": true,
+        "we": true, "be": true, "se": true, "as": true, "de": true,
+        "so": true, "re": true, "st": true, "up": true, "at": true,
+        "ai": true, "al": true, "il": true, "le": true, "li": true,
+      }
+
+      pair := string([]byte{char, nextChar})
+      if !commonPairs[pair] && char != nextChar {
+        uncommonCount++
+      }
+    }
+  }
+
+  if len(lowerMsg) > 30 && uncommonCount > len(lowerMsg)/3 {
+    return true
   }
 
   return false
