@@ -434,6 +434,7 @@ func isSpamMessage(message string) bool {
     "sveiki", "ciao", "hola", "привет",
     "harga", "karna", "anda", "dari",
     "toughalia", "comfythings",
+    "robertgok",
   }
 
   for _, pattern := range spamPatterns {
