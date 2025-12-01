@@ -452,7 +452,7 @@ func isSpamMessage(message string) bool {
         }
       }
     }
-    if letterCount > 0 && capsCount/letterCount > 0.7 {
+    if letterCount > 0 && float64(capsCount)/float64(letterCount) > 0.7 {
       return true
     }
   }
@@ -488,7 +488,7 @@ func isValidName(name string) bool {
       numberCount++
     }
   }
-  if numberCount > len(name)/3 {
+  if numberCount > 0 && float64(numberCount)/float64(len(name)) > 0.33 {
     return false
   }
 
