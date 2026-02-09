@@ -1,0 +1,101 @@
+@page "/newsletter/{id:int}"
+@model NewsletterDetailModel
+@{
+    ViewData["Title"] = $"RideAware - {Model.NewsletterItem?.Subject}";
+}
+
+@if (Model.NewsletterItem != null)
+{
+  <div class="article-wrap">
+    <aside class="article-aside">
+      <a href="/newsletters" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Back to Newsletters
+      </a>
+
+      <div class="article-meta">
+        <h2 class="article-title">
+          @Model.NewsletterItem.Subject
+        </h2>
+
+        <div class="meta-row">
+          <i class="fas fa-calendar-alt"></i>
+          <span>@Model.NewsletterItem.SentAt.ToString("MMMM d, yyyy 'at' h:mm tt")</span>
+        </div>
+      </div>
+
+      <nav class="toc">
+        <div class="toc-title">On this page</div>
+        <ol id="toc-list"></ol>
+      </nav>
+    </aside>
+
+    <main class="article-main">
+      <header class="article-hero">
+        <div class="newsletter-icon">
+          <i class="fas fa-envelope-open-text"></i>
+        </div>
+        <h1>@Model.NewsletterItem.Subject</h1>
+      </header>
+
+      <article class="newsletter-content" id="article">
+        @Html.Raw(Model.NewsletterItem.Body)
+      </article>
+
+      <div class="newsletter-actions">
+        <a href="/newsletters" class="action-btn primary">
+          <i class="fas fa-list"></i>
+          View All Newsletters
+        </a>
+        <button onclick="window.print()" class="action-btn secondary">
+          <i class="fas fa-print"></i>
+          Print
+        </button>
+        <button onclick="shareNewsletter()" class="action-btn secondary">
+          <i class="fas fa-share-alt"></i>
+          Share
+        </button>
+      </div>
+    </main>
+  </div>
+}
+
+@section Scripts {
+  <script>
+    function shareNewsletter() {
+      if (navigator.share) {
+        navigator
+          .share({ title: document.title, url: location.href })
+          .catch(() => {});
+      } else {
+        navigator.clipboard.writeText(location.href);
+        alert('Link copied to clipboard!');
+      }
+    }
+
+    // Build TOC from h2/h3 inside the article
+    (function buildTOC() {
+      const article = document.getElementById('article');
+      if (!article) return;
+
+      const headings = article.querySelectorAll('h2, h3');
+      const list = document.getElementById('toc-list');
+      if (!headings.length || !list) return;
+
+      headings.forEach((h, idx) => {
+        const id = h.id || `h-${idx}`;
+        h.id = id;
+
+        const li = document.createElement('li');
+        li.className = h.tagName === 'H2' ? 'toc-h2' : 'toc-h3';
+
+        const a = document.createElement('a');
+        a.href = `#${id}`;
+        a.textContent = h.textContent;
+
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+    })();
+  </script>
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@(ViewData["Title"] ?? "RideAware")</title>
+
+    <!-- Icons/Fonts -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="~/css/styles.css" />
+
+    <!-- Favicons -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="~/assets/32x32.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="~/assets/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="~/assets/site.webmanifest" />
+    <meta name="theme-color" content="#09090b" />
+
+    @await RenderSectionAsync("Head", required: false)
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="/" class="logo" aria-label="RideAware home">
+          <img
+            src="~/assets/logo.png"
+            alt="RideAware"
+            class="logo-img"
+            width="120"
+            height="24"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </a>
+
+        <ul class="nav-links" id="primary-nav">
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/newsletters">Newsletters</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+
+        <button
+          class="nav-toggle"
+          id="nav-toggle"
+          aria-label="Toggle navigation menu"
+          aria-controls="primary-nav"
+          aria-expanded="false"
+        >
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+
+    @RenderBody()
+
+    <footer class="footer">
+      <p>&copy; 2026 RideAware. All rights reserved.</p>
+    </footer>
+
+    <!-- Core JS -->
+    <script defer src="~/js/main.min.js" crossorigin="anonymous"></script>
+
+    @if (!IsSectionDefined("Scripts"))
+    {
+    <script>
+      (function() {
+        const btn = document.getElementById('nav-toggle');
+        const menu = document.getElementById('primary-nav');
+        if (!btn || !menu) return;
+
+        function closeMenu() {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-expanded', 'false');
+          menu.classList.remove('open');
+        }
+
+        btn.addEventListener('click', () => {
+          const isOpen = btn.classList.toggle('active');
+          btn.setAttribute('aria-expanded', String(isOpen));
+          menu.classList.toggle('open', isOpen);
+        });
+
+        menu.addEventListener('click', (e) => {
+          if (e.target.tagName === 'A') closeMenu();
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeMenu();
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!menu.contains(e.target) && !btn.contains(e.target)) {
+            closeMenu();
+          }
+        });
+      })();
+    </script>
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+  </body>
+</html>

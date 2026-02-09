@@ -1,6 +1,7 @@
 /subscribers.db
-/.venv/
-/.github/
-/__pycache__/
 /.env
-venv
+bin/
+obj/
+*.user
+*.suo
+.vs/

@@ -1,0 +1,78 @@
+@page
+@model NewslettersModel
+@{
+    ViewData["Title"] = "RideAware - Newsletters";
+}
+
+  <section class="page-header">
+    <div class="page-header-content">
+      <div class="header-icon">
+        <i class="fas fa-newspaper"></i>
+      </div>
+      <h1>RideAware Newsletters</h1>
+      <p>
+        Stay updated with the latest cycling tips, training insights, and
+        product updates from our team.
+      </p>
+    </div>
+  </section>
+
+  <main class="main-content">
+    @if (Model.NewslettersList.Any())
+    {
+      <div class="newsletters-grid">
+        @foreach (var newsletter in Model.NewslettersList)
+        {
+          <article class="newsletter-card">
+            <div class="newsletter-header">
+              <div class="newsletter-icon">
+                <i class="fas fa-envelope-open-text"></i>
+              </div>
+              <div class="newsletter-info">
+                <h2>
+                  <a href="/newsletter/@newsletter.Id">
+                    @newsletter.Subject
+                  </a>
+                </h2>
+              </div>
+            </div>
+
+            <div class="newsletter-date">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Sent on: @newsletter.SentAt.ToString("yyyy-MM-dd HH:mm:ss")</span>
+            </div>
+
+            <div class="newsletter-excerpt">
+              Get the latest updates on cycling training, performance tips,
+              and RideAware features in this newsletter edition.
+            </div>
+
+            <a
+              href="/newsletter/@newsletter.Id"
+              class="read-more-btn"
+            >
+              Read Full Newsletter
+              <i class="fas fa-arrow-right"></i>
+            </a>
+          </article>
+        }
+      </div>
+    }
+    else
+    {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-inbox"></i>
+        </div>
+        <h3>No Newsletters Yet</h3>
+        <p>
+          We're working on some amazing content for you. Subscribe to be the
+          first to know when we publish our newsletters!
+        </p>
+        <a href="/" class="subscribe-prompt">
+          <i class="fas fa-bell"></i>
+          Subscribe for Updates
+        </a>
+      </div>
+    }
+  </main>

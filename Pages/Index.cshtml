@@ -1,0 +1,262 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "RideAware - Smart Cycling Training Platform";
+}
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="pulse-dot"></span>
+      Development Build Available
+    </div>
+
+    <h1>Elevate Your<br /><span class="gradient-text">Cycling Journey</span></h1>
+
+    <p class="subtitle">
+      The smart training platform for cyclists who demand excellence.
+      AI-powered plans, real-time analytics, and community-driven motivation.
+    </p>
+
+    <div class="hero-cta">
+      <input
+        type="email"
+        class="email-input"
+        id="email-input"
+        placeholder="Enter your email"
+        required
+      />
+      <button class="btn-primary" id="notify-button">Subscribe</button>
+    </div>
+
+    <p class="hero-note">Join the newsletter for feature updates and early access.</p>
+
+    <a href="https://dev.rideaware.org" class="action-btn secondary" target="_blank" style="margin-top: 1rem;">
+      <i class="fas fa-rocket"></i>
+      Access Development Build
+    </a>
+  </div>
+</section>
+
+<!-- Social Proof -->
+<section class="proof-bar">
+  <div class="container">
+    <div class="proof-item">
+      <div class="number">Q4 2026</div>
+      <div class="label">Launch Target</div>
+    </div>
+    <div class="proof-item">
+      <div class="number">6+</div>
+      <div class="label">Core Features</div>
+    </div>
+    <div class="proof-item">
+      <div class="number">AI</div>
+      <div class="label">Powered Training</div>
+    </div>
+    <div class="proof-item">
+      <div class="number">100%</div>
+      <div class="label">Data Privacy</div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><i class="fas fa-sparkles"></i> Features</div>
+      <h2 class="section-title">Everything you need to train smarter</h2>
+      <p class="section-subtitle">
+        Comprehensive tools to optimize your cycling performance, from planning to recovery.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h3>Smart Training Plans</h3>
+        <p>AI-powered plans that adapt to your goals, fitness level, and schedule automatically.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Advanced Analytics</h3>
+        <p>Interactive charts, progress insights, and detailed performance metrics over time.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-bicycle"></i>
+        </div>
+        <h3>Virtual Training</h3>
+        <p>Expert coaching and immersive structured workouts designed for peak performance.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-heart"></i>
+        </div>
+        <h3>Health &amp; Recovery</h3>
+        <p>Nutrition tracking, recovery optimization, and proactive injury prevention tools.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <h3>Community &amp; Social</h3>
+        <p>Connect with fellow cyclists, share achievements, and climb the leaderboards.</p>
+      </div>
+
+      <div class="feature-card fade-in">
+        <div class="feature-icon">
+          <i class="fas fa-sync-alt"></i>
+        </div>
+        <h3>Smart Integration</h3>
+        <p>Sync with Garmin, Wahoo, and other wearables. Import from Strava and TrainingPeaks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><i class="fas fa-route"></i> How It Works</div>
+      <h2 class="section-title">Three steps to better training</h2>
+      <p class="section-subtitle">
+        Get started in minutes and let RideAware handle the complexity.
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card fade-in">
+        <div class="step-number-ring">
+          <span class="gradient-text" style="font-weight: 700; font-size: 1.1rem;">1</span>
+        </div>
+        <h3>Sign Up</h3>
+        <p>Create your profile and set your cycling goals and fitness level.</p>
+      </div>
+
+      <div class="step-card fade-in">
+        <div class="step-number-ring">
+          <span class="gradient-text" style="font-weight: 700; font-size: 1.1rem;">2</span>
+        </div>
+        <h3>Set Goals</h3>
+        <p>Define what you want to achieve and let our AI build your plan.</p>
+      </div>
+
+      <div class="step-card fade-in">
+        <div class="step-number-ring">
+          <span class="gradient-text" style="font-weight: 700; font-size: 1.1rem;">3</span>
+        </div>
+        <h3>Train Smarter</h3>
+        <p>Follow your adaptive plan, track progress, and crush your goals.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Roadmap -->
+<section class="roadmap">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label"><i class="fas fa-code-branch"></i> Roadmap</div>
+      <h2 class="section-title">Development Status</h2>
+      <p class="section-subtitle">
+        RideAware is actively being built. Track our progress and help shape the platform.
+      </p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item live">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">Live</div>
+        <h4>User Authentication</h4>
+        <p>Sign up, login, and user profiles fully functional</p>
+      </div>
+
+      <div class="timeline-item live">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">Live</div>
+        <h4>Equipment Management</h4>
+        <p>Add and manage your bikes and cycling gear</p>
+      </div>
+
+      <div class="timeline-item live">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">Live</div>
+        <h4>Training Zones</h4>
+        <p>HR and power zone calculations</p>
+      </div>
+
+      <div class="timeline-item in-progress">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">In Progress</div>
+        <h4>Workout Planning</h4>
+        <p>Structured workout builder with interval support</p>
+      </div>
+
+      <div class="timeline-item in-progress">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">In Progress</div>
+        <h4>Performance Analytics</h4>
+        <p>Detailed performance tracking and metrics</p>
+      </div>
+
+      <div class="timeline-item planned">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">Planned</div>
+        <h4>Device Integration</h4>
+        <p>Sync with wearables and cycling computers</p>
+      </div>
+
+      <div class="timeline-item planned">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">Planned</div>
+        <h4>Community Features</h4>
+        <p>Social sharing and competitive leaderboards</p>
+      </div>
+
+      <div class="timeline-item planned">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">Planned</div>
+        <h4>Advanced Training</h4>
+        <p>AI-powered coaching and personalized plans</p>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem;">
+      <p style="color: var(--text-secondary); margin-bottom: 1rem;">Try what's live today</p>
+      <a href="https://dev.rideaware.org" class="action-btn primary" target="_blank">
+        <i class="fas fa-rocket"></i>
+        Access Development Build
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <h2>Ready to elevate your cycling?</h2>
+      <p>Join the waitlist and be first to know when we launch.</p>
+      <div class="hero-cta">
+        <input
+          type="email"
+          class="email-input"
+          id="cta-email-input"
+          placeholder="Enter your email"
+        />
+        <button class="btn-primary" id="cta-notify-button">Subscribe</button>
+      </div>
+    </div>
+  </div>
+</section>

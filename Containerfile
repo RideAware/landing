@@ -1,44 +1,28 @@
 # Build stage
-FROM golang:1.25-alpine AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS builder
 
 WORKDIR /app
 
-# Install build dependencies
-RUN apk add --no-cache git
+# Copy csproj and restore dependencies
+COPY landing.csproj .
+RUN dotnet restore
 
-# Copy go mod files
-COPY go.mod go.sum ./
-
-# Download dependencies
-RUN go mod download
-
-# Copy source code
+# Copy everything and publish
 COPY . .
+RUN dotnet publish -c Release -o /app/publish --no-restore
 
-# Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
-    -o server ./cmd/landing
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
 
-# Final stage
-FROM alpine:latest
-
-# Install ca-certificates for HTTPS
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
 
-# Copy binary from builder
-COPY --from=builder /app/server .
-
-# Copy templates directory
-COPY --from=builder /app/templates ./templates
-
-# Copy static files directory
-COPY --from=builder /app/static ./static
-
-# Copy .env (optional - can be overridden at runtime)
-COPY .env .env
+COPY --from=builder /app/publish .
 
 EXPOSE 5000
 
-CMD ["./server"]
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_RUNNING_IN_CONTAINER=true
+
+CMD ["dotnet", "landing.dll"]
